@@ -36,7 +36,8 @@ import kotlin.math.ceil
 
 @Composable
 fun LineGraph(
-    plot: LinePlot, modifier: Modifier = Modifier,
+    plot: LinePlot,
+    modifier: Modifier = Modifier,
     onSelectionStart: () -> Unit = {},
     onSelectionEnd: () -> Unit = {},
     onSelection: ((Float, List<DataPoint>) -> Unit)? = null
@@ -235,7 +236,7 @@ fun LineGraph(
                                         val displayCurrentXValue = "$${dataModel.y}"
                                         maxMinLabelModel.draw.invoke(
                                             this,
-                                            "$${dataModel.y}",
+                                            displayCurrentXValue,
                                             getMinimumXTextOffset(
                                                 sizeWidth = size.width,
                                                 textWidth = maxMinLabelModel.paint.measureText(

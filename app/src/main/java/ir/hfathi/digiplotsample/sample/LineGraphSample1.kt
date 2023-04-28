@@ -1,6 +1,7 @@
-package ir.hfathi.digiplotsample
+package ir.hfathi.digiplotsample.sample
 
 import android.graphics.Paint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -13,9 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.graphics.alpha
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
@@ -23,17 +27,20 @@ import androidx.core.graphics.red
 import ir.hfathi.digiplot.line.DataPoint
 import ir.hfathi.digiplot.line.LineGraph
 import ir.hfathi.digiplot.line.LinePlot
+import ir.hfathi.digiplotsample.data.DataPoints
 import ir.hfathi.digiplotsample.ui.theme.DigiPlotSampleTheme
+import ir.hfathi.digiplotsample.ui.theme.md_blue_gray
 import ir.hfathi.digiplotsample.ui.theme.md_green
 import java.text.DecimalFormat
 
 
 @Composable
-internal fun LineGraphSample(lines: List<List<DataPoint>>) {
+internal fun LineGraphSample1(modifier: Modifier = Modifier, lines: List<List<DataPoint>>) {
     val totalWidth = remember { mutableStateOf(0) }
-    Column(Modifier.onGloballyPositioned {
+    val density = LocalDensity.current
+    Column(modifier = modifier.onGloballyPositioned {
         totalWidth.value = it.size.width
-    }) {
+    }.background(color = Color.Transparent)) {
         val xOffset = remember { mutableStateOf(0f) }
         val cardWidth = remember { mutableStateOf(0) }
         val visibility = remember { mutableStateOf(false) }
@@ -41,7 +48,7 @@ internal fun LineGraphSample(lines: List<List<DataPoint>>) {
 
         Box(
             modifier = Modifier
-                .height(150.dp)
+                .height(120.dp)
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
@@ -94,59 +101,39 @@ internal fun LineGraphSample(lines: List<List<DataPoint>>) {
                             color = Color.Red
                         )
                     }
-                    Surface(
+                    Box(
                         modifier = Modifier
-                            .width(50.dp)
-                            .onGloballyPositioned {
-                                cardWidth.value = it.size.width
-                            }
-                            .graphicsLayer(translationX = xOffset.value)
-                            .alpha(if (visibility.value) 1f else 0f),
+                            .height(32.dp)
+                            .fillMaxWidth()
                     ) {
                         Text(
                             textAlign = TextAlign.Center,
                             text = "${time.toInt()}:00",
                             style = MaterialTheme.typography.labelLarge,
                             color = Color.Gray,
-                            modifier = Modifier.padding(all = 4.dp)
+                            modifier = Modifier
+                                .padding(all = 4.dp)
+                                .onGloballyPositioned {
+                                    cardWidth.value = it.size.width
+                                }
+                                .graphicsLayer(translationX = xOffset.value)
+                                .alpha(if (visibility.value) 1f else 0f),
                         )
-
                     }
                 }
             }
         }
 
         LineGraph(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
             plot = LinePlot(
                 horizontalExtraSpace = 20.dp,
                 paddingTop = 50.dp,
                 paddingBottom = 120.dp,
                 isZoomAllowed = false,
-                lines = listOf(
-                    LinePlot.Line(
-                        lineShadowAlpha = 0.2f,
-                        dataPoints = lines[0],
-                        connection = LinePlot.Connection(
-                            color = md_green,
-                            strokeWidth = 2.dp,
-                        ),
-                        intersection = null,
-                        maxMinLabel = LinePlot.MaxMinLabel(
-                            paint = Paint().apply {
-                                color = Color.Gray.toInt()
-                                textAlign = Paint.Align.LEFT
-                                textSize = 30f
-                            },
-                            maxLabelXY = Pair(10f, 50f),
-                            minLabelXY = Pair(10f, 60f)
-                        ),
-                        highlight = LinePlot.Highlight(
-                            color = md_green,
-                            borderColor = Color.White,
-                            borderEnable = true
-                        ),
-                    ),
-                ),
+                lines = getLinesDetails(lines = lines, density = density),
                 selection = LinePlot.Selection(
                     enabled = true,
                     highlight = LinePlot.Connection(
@@ -159,9 +146,7 @@ internal fun LineGraphSample(lines: List<List<DataPoint>>) {
                 ),
 
                 ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp),
+
             onSelectionStart = { visibility.value = true },
             onSelectionEnd = { visibility.value = false },
 
@@ -173,19 +158,52 @@ internal fun LineGraphSample(lines: List<List<DataPoint>>) {
                 xCenter - cWidth / 2f < 0f -> 0f
                 else -> xCenter - cWidth / 2f
             }
-            xOffset.value = xCenter
+            xOffset.value = xCenter - (xCenter * 0.1f)
             points.value = pts
         }
     }
 }
 
+private fun getLinesDetails(lines: List<List<DataPoint>>, density: Density): List<LinePlot.Line> {
+    val result = mutableListOf<LinePlot.Line>()
+    lines.forEach { line ->
+        result.add(
+            LinePlot.Line(
+                lineShadowAlpha = 0.2f,
+                dataPoints = line,
+                connection = LinePlot.Connection(
+                    color = if (line.first().y != 5f) md_green else md_blue_gray,
+                    strokeWidth = 2.dp,
+                ),
+                intersection = null,
+                maxMinLabel = LinePlot.MaxMinLabel(
+                    paint = Paint().apply {
+                        color = Color.Gray.toInt()
+                        textAlign = Paint.Align.LEFT
+                        textSize = density.run { 14.sp.toPx() }
+                    },
+                    maxLabelXY = Pair(10f, 50f),
+                    minLabelXY = Pair(10f, 60f)
+                ),
+                highlight = LinePlot.Highlight(
+                    color = md_green,
+                    borderColor = Color.White,
+                    borderEnable = true
+                ),
+            )
+        )
+    }
+    return result
+}
+
 @Preview(showBackground = true)
 @Composable
-fun LineGraph2Preview() {
+fun LineGraphPreview() {
     DigiPlotSampleTheme {
-        LineGraphSample(listOf(DataPoints.dataPoints1, DataPoints.dataPoints2))
+        LineGraphSample1(lines = listOf(DataPoints.dataPoints1, DataPoints.dataPoints2))
     }
 }
+
 
 fun Color.toInt(): Int {
     return android.graphics.Color.argb(
