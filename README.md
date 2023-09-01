@@ -1,10 +1,9 @@
-# Digi Plot- easy to use chart library with gesture detection for Android and Ios
+# Digi Plot is an intuitive and user-friendly chart library designed for both Android and iOS platforms, featuring seamless gesture detection for enhanced interactivity.
 [![platform](https://img.shields.io/badge/platform-Android-yellow.svg)](https://www.android.com)
 [![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg?style=plastic)](https://android-arsenal.com/api?level=24)
 [![](https://jitpack.io/v/hamidfathi1998/Digi-Permission.svg)](https://jitpack.io/#hamidfathi1998/Digi-Plot)
 
-Chart Library built using Jetpack Compose and is highly customizable and has gesture detection like trust wallet, support multi line.
-Made with ❤️ for Android Developers by Hamid Fathi.
+Introducing a versatile Chart Library meticulously crafted with Jetpack Compose, offering extensive customization options and robust gesture detection similar to the Trust Wallet app. This library supports multi-line charts, serving as a heartfelt creation for Android Developers, proudly crafted by Hamid Fathi. ❤️
 
 <p align="left">
  <a><img width="25%" height="420px"  src="gif/digi-plot.gif"></a>
@@ -57,7 +56,8 @@ LineGraph(
 )
 ```
 
-for show the info when you touch a point you can use this help code
+To display information when you touch a data point, you can make use of this helpful code.
+
 ```kotlin
     val totalWidth = remember { mutableStateOf(0) }
     val density = LocalDensity.current
