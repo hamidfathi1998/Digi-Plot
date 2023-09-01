@@ -3,7 +3,8 @@
 [![API](https://img.shields.io/badge/API-24%2B-brightgreen.svg?style=plastic)](https://android-arsenal.com/api?level=24)
 [![](https://jitpack.io/v/hamidfathi1998/Digi-Permission.svg)](https://jitpack.io/#hamidfathi1998/Digi-Plot)
 
-Chart Library built using Jetpack Compose and is highly customizable and has gesture detection like trust wallet. Made with ❤️ for Android Developers by Hamid Fathi.
+Chart Library built using Jetpack Compose and is highly customizable and has gesture detection like trust wallet, support multi line.
+Made with ❤️ for Android Developers by Hamid Fathi.
 
 <p align="left">
  <a><img width="25%" height="420px"  src="gif/digi-plot.gif"></a>
